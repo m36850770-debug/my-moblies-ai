@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Mobile AI</title>
+  <script src="https://js.puter.com/v2/"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #111827;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 90vh;
+      margin: 0;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+    #chat {
+      flex: 1;
+      overflow-y: auto;
+      border: 1px solid #374151;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .msg { padding: 8px 12px; border-radius: 8px; max-width: 80%; }
+    .user { background: #2563eb; align-self: flex-end; }
+    .bot { background: #374151; align-self: flex-start; }
+    .input-row { display: flex; gap: 8px; }
+    input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+    }
+    button {
+      padding: 12px 18px;
+      background: #10b981;
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h2>My Pocket AI</h2>
+  <div id="chat"></div>
+
+  <div class="input-row">
+    <input type="text" id="userInput" placeholder="Ask anything...">
+    <button onclick="askAI()">Send</button>
+  </div>
+
+  <script>
+    async function askAI() {
+      const input = document.getElementById("userInput");
+      const chat = document.getElementById("chat");
+      const text = input.value.trim();
+      if (!text) return;
+
+      // Add user message to chat
+      chat.innerHTML += `<div class="msg user">${text}</div>`;
+      input.value = "";
+      chat.scrollTop = chat.scrollHeight;
+
+      // Bot loading indicator
+      const botMsg = document.createElement("div");
+      botMsg.className = "msg bot";
+      botMsg.innerText = "Thinking...";
+      chat.appendChild(botMsg);
+
+      try {
+        // Free client-side AI call
+        const response = await puter.ai.chat(text);
+        botMsg.innerText = response.message.content;
+      } catch (err) {
+        botMsg.innerText = "Error getting response.";
+      }
+      chat.scrollTop = chat.scrollHeight;
+    }
+  </script>
+</body>
+</html>
